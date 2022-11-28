@@ -60,8 +60,28 @@ The sample consisted of 66% wireless telephone numbers and 34% landline telephon
 # Here you can load in and clean the census data (you may need to do the cleaning in a separate R script). 
 
 census_data <- read_csv("gss_clean.csv")
+summary(census_data)
+
+income_family_data <- census_data %>% select(income_family)
+income_family_data_cat <- unique(income_family_data)
+income_family_data_cat
 
 # You may need additional chunks, in case you want to include some of the cleaning output.
+census_data <- census_data %>% 
+  rowwise() %>% 
+  mutate(income_family = case_when(
+    income_family=="Less than $25,000" ~ 0,
+    income_family=="$25,000 to $49,999" ~ 1,
+    income_family=="$50,000 to $74,999" ~ 2,
+    income_family=="$75,000 to $99,999" ~ 3,
+    income_family=="$100,000 to $ 124,999" ~ 4,
+    income_family=="$125,000 and more" ~ 5,
+  )) 
+
+census_data <- census_data %>% select(age, total_children, is_male, hh_size, income_family)
+census_data <- na.omit(census_data)
+summary(census_data) 
+#tells Rstudio to omit all rows of data with NA in the variables of interest
 
 ```
 
@@ -107,16 +127,18 @@ survey_data <- read_csv("ces2019-phone_clean.csv")
 
 #### You will need to update/clean the code below based off the variables you want to use in your poststratification.
 
+survey_data <- survey_data %>% 
+  mutate(is_male = ifelse(q3== 1, 1, 0)) 
+
 survey_data <- 
   survey_data %>% 
   mutate(age = 2019-q2,
          vote_liberal = ifelse(q11==1, 1, 0)) %>% 
-  select(age, vote_liberal)
+  select(age, is_male, vote_liberal)
 
 census_data <- census_data %>% 
   mutate(age=round(age)) %>% 
-  select(age)
-
+  select(age, is_male)
 ```
 
 
