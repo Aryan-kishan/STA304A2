@@ -158,6 +158,11 @@ census_data <- census_data %>%
 ```{r, echo = TRUE}
 
 # Use this to create some plots. Should probably describe both the sample and population.
+hist(survey_data$age)
+hist(survey_data$is_male)
+
+hist(census_data$age)
+hist(census_data$is_male)
 
 ```
 
