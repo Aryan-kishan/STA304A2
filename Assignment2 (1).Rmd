@@ -86,7 +86,8 @@ summary(census_data)
 ```
 
 
-<Type here a summary of the cleaning process (**only add in stuff beyond my original gss_cleaning.R code**). You only need to describe additional cleaning that you and your group did.> ]
+<Beyond the original cleaning process, the census data was further cleaned by selecting 5 important variables that could be important to determine the vote of individuals. For the variables income_family the data was converted to numeric values of levels of income instead of categorical values to be easier for computations. The data was also then cleaned by omitting any rows of data that had missing values in these variables. Age is defined as the average age of the respondent rounded to the nearest integer, while gender is the identified gender of the individual. 
+> ]
 
 <Here is a resource for grabbing the CES2019 data: [https://awstringer1.github.io/sta238-book/section-short-tutorial-on-pulling-data-for-assignment-1.html#section-canadian-election-study](https://awstringer1.github.io/sta238-book/section-short-tutorial-on-pulling-data-for-assignment-1.html#section-canadian-election-study)>
 
@@ -144,7 +145,8 @@ census_data <- census_data %>%
 
 <Remember, you may want to use multiple datasets here, if you do end up using multiple data sets, or merging the data, be sure to describe this in the cleaning process and be sure to discuss important aspects of all the data that you used.>
 
-<Include a description of the important variables.> 
+<The important variables we will be using for post-stratification in the model are age and gender since these are the only two variables that both the clean census and clean survey data share. These will also be important variables in determining the vote of individuals. There was a naive assumption made that anyone who is not male is being treated as female. This assumption shouldn't widely affect the data since only 1 individual is classified as other. 
+> 
 
 ```{r, include=FALSE}
 
