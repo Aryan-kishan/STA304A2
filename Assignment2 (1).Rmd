@@ -25,23 +25,24 @@ library(tidyverse)
 
 <Optional: You can also include a description of each section of this report as a last paragraph.>
   
-The main objective of this report is to use a regression model with post-stratification to predict the overall popular vote for the upcoming Canadian federal election (tentatively 2025). 
+The main objective of this report is to use a regression model with post-stratification to predict the overall popular vote for the upcoming Canadian federal election (tentatively 2025).
   
-   For the analysis involved in this report, we will use two types of data — the census data and the survey data. The 2017 General Social Survey or GSS will serve as our census data, this includes every non-institutionalized individual over the age of 15 that is residing in one of the ten provinces of Canada. This 2017 GSS data was collected from February 2nd to November 30th, 2017 via telephone. The 2019 Canadian Election Study (CES) phone survey will serve as our survey data, this includes Canadian citizens and permanent residents aged 18 and above. This data was collected during and after the 2019 Canadian federal election through computer-assisted telephone interviews.
+    For the analysis involved in this report, we will use two types of data — the census data and the survey data. The 2017 General Social Survey or GSS will serve as our census data, this includes every non-institutionalized individual over the age of 15 that is residing in one of the ten provinces of Canada. This 2017 GSS data was collected from February 2nd to November 30th, 2017 via telephone. The 2019 Canadian Election Study (CES) phone survey will serve as our survey data, this includes Canadian citizens and permanent residents aged 18 and above. This data was collected during and after the 2019 Canadian federal election through computer-assisted telephone interviews.
   
-   This analysis is important because we will combine a multiple logistic regression model with post-stratification. Here, post-stratification will allow us to adjust the weights of each of the predictor variables to represent the population. This would make our final predictive model built using sample data more accurate. More specifically, the variables “gender” and “age” will be used to conduct post-stratification.
+    This analysis is important because we will combine a multiple logistic regression model with post-stratification. Here, post-stratification will allow us to adjust the weights of each of the predictor variables to represent the population. This would make our final predictive model built using sample data more accurate. More specifically, the variables “gender” and “age” will be used to conduct post-stratification.
   
-   The research question for our multiple logistic regression model with post stratification can be framed as follows: “Are age, province of residence, party preference, income and previous voting record factors that predict if a person will vote for the Liberal Party of Canada?”.
+    The research question for our multiple logistic regression model with post stratification can be framed as follows: “Are age, province of residence, party preference, income and previous voting record factors that predict if a person will vote for the Liberal Party of Canada?”.
   
-   Furthermore, we can represent this question in the form of a null and alternative hypothesis. Here the null hypothesis states that none of the predictive covariates have a statistically significant relationship with our dependent variable. On the other hand, the alternative hypothesis states that at least one predictive covariate has a statistically significant relationship with our dependent variable.
+    Furthermore, we can represent this question in the form of a null and alternative hypothesis. Here the null hypothesis states that none of the predictive covariates have a statistically significant relationship with our dependent variable. On the other hand, the alternative hypothesis states that at least one predictive covariate has a statistically significant relationship with our dependent variable.
   
 $$H_0:\beta_0 =\beta_1 = ... = \beta_k = 0$$
 $$H_0:\beta_0 =\beta_1 = ... = \beta_k \neq 0$$
-  
-   Overall, this hypothesis test is important because it will help us determine whether our model is statistically significant and whether it can actually predict if an individual will vote for the Liberal Party of Canada.
+
+
+    Overall, this hypothesis test is important because it will help us determine whether our model is statistically significant and whether it can actually predict if an individual will vote for the Liberal Party of Canada.
   
 Lastly, our report will contain the following sections: “Data”, “Methods”, “Results”, “Conclusion” and “Bibliography”. 
-  
+
 
 
 
