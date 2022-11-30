@@ -151,6 +151,31 @@ census_data <- census_data %>%
 ```{r, include=FALSE}
 
 # Use this to calculate some summary measures. 
+library(knitr)
+
+survey_data %>% 
+  summarise("Avg" = mean(age), "StD" = sd(age), "n" = length(age), "StdError" = StD/sqrt(n)) %>%
+  rename("Average" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Survey Data Age")
+
+survey_data %>% 
+  summarise("Avg" = mean(is_male), "StD" = sd(is_male), "n" = length(is_male), "StdError" = StD/sqrt(n)) %>%
+  rename("Proportion Male" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Survey Data is_male")
+
+census_data %>% 
+  summarise("Avg" = mean(age), "StD" = sd(age), "n" = length(age), "StdError" = StD/sqrt(n)) %>%
+  rename("Average" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Census Data Age")
+
+census_data %>% 
+  summarise("Avg" = mean(is_male), "StD" = sd(is_male), "n" = length(is_male), "StdError" = StD/sqrt(n)) %>%
+  rename("Proportion Male" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Census Data is_male")
+
+
+
+
 
 ```
 
