@@ -127,6 +127,8 @@ survey_data <- read_csv("ces2019-phone_clean.csv")
 ```{r, include = FALSE}
 
 #### You will need to update/clean the code below based off the variables you want to use in your poststratification.
+survey_data %>% mutate(voted_2019 = ifelse(p2 == 1,1,0)) %>% select(voted_2019)
+
 survey_data_LARGE <- 
   survey_data %>% 
   mutate(vote_liberal = ifelse(p3==1,1,0),
@@ -155,22 +157,21 @@ survey_data_LARGE <-
            q11 == 5 ~ "Green Party",
            q11 == 6 ~ "People's Party",
            q11 == -9 || -8 || -7 || 7 || 8 || 9 || 10  ~ "Other"),
-         lean_party = q12,
+         lean_party = case_when(
+           q12 == 1 ~ "Liberal",
+           q12 == 2 ~ "Conservatives",
+           q12 == 3 ~ "New Democratic Party",
+           q12 == 4 ~ "Block Quebecois",
+           q12 == 5 ~ "Green Party",
+           q12 == 6 ~ "People's Party",
+           q12 == -9 || -8 || -7 || 7 || 8 || 9 || 10  ~ "Other"),
          gov_satisfaction = q13,
-         voting_duty = q76,
-         volunteer_participation = q45,
-         know_premier = q48,
-         know_financemin = q49,
-         more_refugees = case_when(
-           q40 == 1 ~ "More Refugees",
-           q40 == 2 ~ "Less Refugees",
-           q40 == 3 ~ "same Amount",
-           q40 == -9 || -8 || -7 ~ "Other"),
-         more_immigrants = case_when(
-           q39 == 1 ~ "More Immigrants",
-           q39 == 2 ~ "Less Immigrants",
-           q39 == 3 ~ "same Amount",
-           q39 == -9 || -8 || -7 ~ "Other"),
+         voting_duty = ifelse(q76 == 1,1,0),
+         volunteer = ifelse(q45 == 1,1,0),
+         know_premier = ifelse(q48 == 1 |q48 == 2, 1,0),
+         know_financemin = ifelse(q49 == 1 |q49 == 2, 1,0),
+         more_refugees = ifelse(q40 == 1,1,0),
+         more_immigrants = ifelse(q39 == 1,1,0),
          perceived_winner = case_when(
            q35 == 1 ~ "Liberal Party",
            q35 == 2 ~ "Conservative Party",
@@ -187,21 +188,9 @@ survey_data_LARGE <-
            q37 == 5 ~ "Green Party",
            q37 == 6 ~ "People's Party",
            q37 == -9 || -8 || -7 ||7 ~ "Other"),
-         opinion_fedeconomy = case_when(
-           q32 == 1 ~ "Better",
-           q32 == 2 ~ "Worse",
-           q32 == 3 ~ "No difference",
-           q32 == -9 || -8 || -7 ~ "Other"),
-         opinion_economy = case_when(
-           q31 == 1 ~ "Better",
-           q31 == 2 ~ "Worse",
-           q31 == 3 ~ "No difference",
-           q31 == -9 || -8 || -7 ~ "Other"),
-         opinion_immigrant_spending = case_when(
-           q27_e == 1 ~ "Spend More",
-           q27_e == 2 ~ "Spend Less",
-           q27_e == 3 ~ "Same as now",
-           q27_e == -9 || -8 || -7 ~ "Other"),
+         fed_bettereconomy = ifelse(q32 == 1,1,0),
+         better_economy = ifelse(q31 == 1,1,0),
+         more_immigrantspending = ifelse(q27_e == 1, 1,0),
          opinion_defence_spending = case_when(
            q27_d == 1 ~ "Spend More",
            q27_d == 2 ~ "Spend Less",
@@ -223,10 +212,7 @@ survey_data_LARGE <-
            q46 == 3 ~ "Somewhat Disagree",
            q46 == 4 ~ "Strongly Disagree",
            q46 == -9 || -8 || -7 ~ "Other"),
-         voted_2015 = case_when(
-           q59 == 1 ~ "Yes", 
-           q59 == 2 ~ "No",
-           q59 == -9 || -8 || -7 || 3 ~ "Other"),
+         voted_2015 = ifelse(q59 == 1,1,0),
          party_2015 = case_when(
            q60 == 1 ~ "Liberal Party",
            q60 == 2 ~ "Conservative Party",
@@ -235,36 +221,21 @@ survey_data_LARGE <-
            q60 == 5 ~ "Green Party",
            q60 == 6 ~ "People's Party",
            q60 == -9 || -8 || -7 ||7 ~ "Other"),
-         watched_debate = case_when(
-           q77 == 1 | 4 | 3 ~ "yes",
-           q77 == 2 ~ "no",
-           q77 == -9 || -8 || -7 ~ "other"),
-         education = q61,
+         watched_debate = ifelse(q77 == 1,1,0),
+         completed_highschool = ifelse (q61 >= 5, 1,0),
          religion = q62,
-         religion_importance = q63,
-         first_language = case_when(
-           q67 == 1 ~ "English",
-           q67 == 4 ~ "French",
-           q67 != 1 || 4 ~ "Other"),
+         religion_important = ifelse (q63 == 1 | q63 == 2, 1,0),
+         en_first_language = ifelse(q67 == 1,1,0),
          household_income = q69,
-         voted_2019 = case_when(
-           p2 == 1 ~ "Yes",
-           p2 == 2 || 3 || 4 || 6 ~ "No",
-           p2 == -9 || -8 || -7 || 5 ~ "other"),
+         voted_2019 = ifelse(p2 == 1,1,0),
          opinion_federal_performance = case_when(
            p5 == 1 ~ "Very Good Job",
            p5 == 2 ~ "A good job",
            p5 == 3 ~ "Bad Job",
            p5 == 4 ~ "Very Bad Job",
            p5 < 1 ~ "Other"),
-         married = case_when(
-           p50 == 1 ~ "Married",
-           p50 == -8 || -9 || -7 ~ "other",
-           p50 == 2 || 3 || 4 || 5 || 6 ~ "Not Married"),
-         union = case_when(
-           p51 == 1 ~ "Yes",
-           p51 == 2 ~ "No",
-           p51 < 1 ~ "other"),
+         married = ifelse(p50 == 1,1,0),
+         union = ifelse(p51 == 1,1,0),
          religious_attendence = case_when(
            p54 == 1 ~ "never",
            p54 == 2 ~ "once a year",
@@ -276,8 +247,8 @@ survey_data_LARGE <-
          control_of_power = p33,
          vote_matters = p34,
          ) %>% 
-  select(vote_liberal, age, province, elec_interest, pref_party, lean_party, gov_satisfaction, know_premier, volunteer_participation, know_financemin, voting_duty, more_refugees, more_immigrants, perceived_winner, perceived_winner_riding, opinion_fedeconomy, opinion_economy, opinion_immigrant_spending,
-opinion_defence_spending, opinion_crime_spending, opinion_environment_spending, opinion_trudeau, voted_2015, party_2015, watched_debate, education, religion, religion_importance, first_language, household_income, voted_2019, opinion_federal_performance, married, union, religious_attendence, control_of_power, vote_matters)
+  select(vote_liberal, age, province, elec_interest, pref_party, lean_party, gov_satisfaction, know_premier, volunteer, know_financemin, voting_duty, more_refugees, more_immigrants, perceived_winner, perceived_winner_riding, fed_bettereconomy, better_economy, more_immigrantspending,
+opinion_defence_spending, opinion_crime_spending, opinion_environment_spending, opinion_trudeau, voted_2015, party_2015, watched_debate, completed_highschool, religion, religion_important, en_first_language, household_income, voted_2019, opinion_federal_performance, married, union, religious_attendence, control_of_power, vote_matters)
                                                  
                                                  
 survey_data <- survey_data %>% 
