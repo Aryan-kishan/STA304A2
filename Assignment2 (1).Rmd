@@ -135,11 +135,11 @@ survey_data <-
   survey_data %>% 
   mutate(age = 2019-q2,
          vote_liberal = ifelse(q11==1, 1, 0)) %>% 
-  select(age, is_male, vote_liberal)
+  select(age, is_male, q70r, q71r, vote_liberal)
 
 census_data <- census_data %>% 
   mutate(age=round(age)) %>% 
-  select(age, is_male)
+  select(age, total_children, is_male, hh_size, income_family)
 ```
 
 
