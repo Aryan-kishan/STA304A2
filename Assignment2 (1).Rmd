@@ -144,7 +144,7 @@ survey_data_LARGE <-
            q4 == 10 ~ "British Columbia",
            q4 == 11 ~ "Northwest Territories",
            q4 == 12 ~ "Yukon",
-           q4 == 13 ~ "Nunabut"),
+           q4 == 13 ~ "Nunavut"),
          elec_interest = q9,
          voting_likelihood = q10,
          pref_party = case_when(
@@ -297,6 +297,12 @@ census_data <- census_data %>%
 
 <Remember, you may want to use multiple datasets here, if you do end up using multiple data sets, or merging the data, be sure to describe this in the cleaning process and be sure to discuss important aspects of all the data that you used.>
 
+** IMPORTANT VARIABLES: vote_liberal (response variable), province, pref_party, (age), party_2015 (...any more that we want to especially focus on) will be especially
+informative; particular provinces tend to lean certain ways politically; the preferred party variable is directly indicative of voters' preferences; typically most voters will vote the same way election after election (SOURCE) so information regarding the previous election's voting record is expected to be very informative.
+** OTHER VARIABLES TO LOOK OUT FOR: income, perceived winners, opinion_fedeconomy and opinion_econonmy, variables related to immigration, refugees, defense, and crime typically reflect partisan issues (SOURCE) and are expected to also be informative --> can describe this more in depth if needed
+                                          
+                                          
+                                             
 <The important variables we will be using for post-stratification in the model are age and gender since these are the only two variables that both the clean census and clean survey data share. These will also be important variables in determining the vote of individuals. There was a naive assumption made that anyone who is not male is being treated as female. This assumption shouldn't widely affect the data since only 1 individual is classified as other. 
 > 
 
@@ -333,7 +339,8 @@ census_data %>%
 
 
 <Include a description of the numerical summaries. Remember you can use `r ` to use inline R code.>
-
+                                                        
+                                                        
 ```{r, echo = TRUE}
 
 # Use this to create some plots. Should probably describe both the sample and population.
@@ -355,9 +362,12 @@ hist(census_data$is_male)
 
 ### Model Specifics
 <Here you can describe your regression model>
-
+**USING LOGISITIC MODEL TO BEGIN --> 
+                                                        
 <I will (incorrectly) be using a linear regression model to model the proportion of voters who will vote for Donald Trump. This is a naive model. I will only be using age, which is recorded as a numeric variable, to model the probability of voting for Donald Trump. The simple linear regression model I am using is:> 
 
+                                                        
+                                                        
 $$ y = \beta_0+\beta_1  x_{age} + \epsilon$$
 
 <Where $y$ represents the ....  $\beta_0$ represents....>
