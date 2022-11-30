@@ -70,12 +70,12 @@ income_family_data_cat
 census_data <- census_data %>% 
   rowwise() %>% 
   mutate(income_family = case_when(
-    income_family=="Less than $25,000" ~ 0,
-    income_family=="$25,000 to $49,999" ~ 1,
-    income_family=="$50,000 to $74,999" ~ 2,
-    income_family=="$75,000 to $99,999" ~ 3,
-    income_family=="$100,000 to $ 124,999" ~ 4,
-    income_family=="$125,000 and more" ~ 5,
+    income_family=="Less than $25,000" ~ 12500,
+    income_family=="$25,000 to $49,999" ~ 37500,
+    income_family=="$50,000 to $74,999" ~ 62500,
+    income_family=="$75,000 to $99,999" ~ 87500,
+    income_family=="$100,000 to $ 124,999" ~ 112500,
+    income_family=="$125,000 and more" ~ 200000,
   )) 
 
 census_data <- census_data %>% select(age, total_children, is_male, hh_size, income_family)
