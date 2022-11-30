@@ -145,7 +145,7 @@ survey_data_LARGE <-
            q4 == 11 ~ "Northwest Territories",
            q4 == 12 ~ "Yukon",
            q4 == 13 ~ "Nunabut"),
-         interest = q9,
+         elec_interest = q9,
          voting_likelihood = q10,
          pref_party = case_when(
            q11 == 1 ~ "Liberal",
@@ -276,7 +276,7 @@ survey_data_LARGE <-
          control_of_power = p33,
          vote_matters = p34,
          ) %>% 
-  select(vote_liberal, age, province, interest, pref_party, lean_party, gov_satisfaction, know_premier, volunteer_participation, know_financemin, voting_duty, more_refugees, more_immigrants, perceived_winner, perceived_winner_riding, opinion_fedeconomy, opinion_economy, opinion_immigrant_spending,
+  select(vote_liberal, age, province, elec_interest, pref_party, lean_party, gov_satisfaction, know_premier, volunteer_participation, know_financemin, voting_duty, more_refugees, more_immigrants, perceived_winner, perceived_winner_riding, opinion_fedeconomy, opinion_economy, opinion_immigrant_spending,
 opinion_defence_spending, opinion_crime_spending, opinion_environment_spending, opinion_trudeau, voted_2015, party_2015, watched_debate, education, religion, religion_importance, first_language, household_income, voted_2019, opinion_federal_performance, married, union, religious_attendence, control_of_power, vote_matters)
                                                  
                                                  
