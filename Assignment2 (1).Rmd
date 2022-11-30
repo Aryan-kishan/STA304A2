@@ -190,6 +190,47 @@ survey_data_LARGE <-
          volunteer = ifelse(q45 == 1,1,0),
          know_premier = ifelse(q48 == 1 |q48 == 2, 1,0),
          know_financemin = ifelse(q49 == 1 |q49 == 2, 1,0),
+         more_refugees = ifelse(q40 == survey_data_LARGE <- 
+  survey_data %>% 
+  mutate(vote_liberal = ifelse(p3==1,1,0),
+         age = 2022-q2,
+         province = case_when(
+           q4 == 1 ~ "Newfoundland and Labrador",
+           q4 == 2 ~ "Prince Edward Island",
+           q4 == 3 ~ "Nova Scotia",
+           q4 == 4 ~ "New Brunswick",
+           q4 == 5 ~ "Quebec",
+           q4 == 6 ~ "Ontario",
+           q4 == 7 ~ "Manitoba",
+           q4 == 8 ~ "Sasketchewan",
+           q4 == 9 ~ "Alberta",
+           q4 == 10 ~ "British Columbia",
+           q4 == 11 ~ "Northwest Territories",
+           q4 == 12 ~ "Yukon",
+           q4 == 13 ~ "Nunavut"),
+         elec_interest = q9,
+         voting_likelihood = q10,
+         pref_party = case_when(
+           q11 == 1 ~ "Liberal",
+           q11 == 2 ~ "Conservatives",
+           q11 == 3 ~ "New Democratic Party",
+           q11 == 4 ~ "Block Quebecois",
+           q11 == 5 ~ "Green Party",
+           q11 == 6 ~ "People's Party",
+           q11 == -9 || -8 || -7 || 7 || 8 || 9 || 10  ~ "Other"),
+         lean_party = case_when(
+           q12 == 1 ~ "Liberal",
+           q12 == 2 ~ "Conservatives",
+           q12 == 3 ~ "New Democratic Party",
+           q12 == 4 ~ "Block Quebecois",
+           q12 == 5 ~ "Green Party",
+           q12 == 6 ~ "People's Party",
+           q12 == -9 || -8 || -7 || 7 || 8 || 9 || 10  ~ "Other"),
+         gov_satisfaction = q13,
+         voting_duty = ifelse(q76 == 1,1,0),
+         volunteer = ifelse(q45 == 1,1,0),
+         know_premier = ifelse(q48 == 1 |q48 == 2, 1,0),
+         know_financemin = ifelse(q49 == 1 |q49 == 2, 1,0),
          more_refugees = ifelse(q40 == 1,1,0),
          more_immigrants = ifelse(q39 == 1,1,0),
          perceived_winner = case_when(
@@ -246,16 +287,26 @@ survey_data_LARGE <-
          religion = q62,
          religion_important = ifelse (q63 == 1 | q63 == 2, 1,0),
          en_first_language = ifelse(q67 == 1,1,0),
-         household_income = q69,
-         voted_2019 = ifelse(p2 == 1,1,0),
+         household_income = ifelse(q69 >= 0, q69, 0),
+         voted_2019 = case_when(
+           p2 == 1 ~ 1,
+           p2 == 2 || 3 || 5 ~ 2,
+           p2 == -9||-8||-7||5||"NA" ~ 0
+         ),
          opinion_federal_performance = case_when(
            p5 == 1 ~ "Very Good Job",
            p5 == 2 ~ "A good job",
            p5 == 3 ~ "Bad Job",
            p5 == 4 ~ "Very Bad Job",
-           p5 < 1 ~ "Other"),
-         married = ifelse(p50 == 1,1,0),
-         union = ifelse(p51 == 1,1,0),
+           p5  == -9 || -8 || -7 || "NA" ~ "Other"),
+         married = case_when(
+           p50 == 1 ~ "married",
+           p50 == 1 || 2 || 3|| 4|| 5 || 6 ~ "not married"
+           ),
+         union = case_when(
+           p51 == 1 ~ "IN a union",
+           p50 == 1 || 2 || 3|| 4|| 5 || 6 ~ "not in a union"
+           ),
          religious_attendence = case_when(
            p54 == 1 ~ "never",
            p54 == 2 ~ "once a year",
@@ -263,12 +314,29 @@ survey_data_LARGE <-
            p54 == 4 ~ "once a month",
            p54 == 5 ~ "two or more times a month",
            p54 == 6 ~ "once a week",
-           p54 == 7 ~ "more than once a week"),
-         control_of_power = p33,
-         vote_matters = p34,
+           p54 == 7 ~ "more than once a week",
+           is.na(p54) == TRUE ~ "other"
+           ),
+         control_of_power = case_when(
+           p33 == 1 ~ 1,
+           p33 == 2 ~ 2,
+           p33 == 3 ~ 3,
+           p33 == 4 ~ 4,
+           p33 == 5 ~ 5,
+           p33 == -9 || - 8 || -7 || NA ~ 0
+           ),
+         vote_matters = case_when(
+           p34 == 1 ~ 1,
+           p34 == 2 ~ 2,
+           p34 == 3 ~ 3,
+           p34 == 4 ~ 4,
+           p34 == 5 ~ 5,
+           p34 == -9 || - 8 || -7 || NA ~ 0
+           )
          ) %>% 
   select(vote_liberal, age, province, elec_interest, pref_party, lean_party, gov_satisfaction, know_premier, volunteer, know_financemin, voting_duty, more_refugees, more_immigrants, perceived_winner, perceived_winner_riding, fed_bettereconomy, better_economy, more_immigrantspending,
 opinion_defence_spending, opinion_crime_spending, opinion_environment_spending, opinion_trudeau, voted_2015, party_2015, watched_debate, completed_highschool, religion, religion_important, en_first_language, household_income, voted_2019, opinion_federal_performance, married, union, religious_attendence, control_of_power, vote_matters)
+
                                                  
                                                  
 survey_data <- survey_data %>% 
