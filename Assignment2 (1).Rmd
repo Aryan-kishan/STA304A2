@@ -286,16 +286,22 @@ hist(census_data$is_male)
 
 ## Methods
 
-<Include some text introducing the methodology, maybe restating the problem/goal of this analysis.>
+<-	Goal of this report is to” predict the overall popular vote of the next Canadian federal election”
+-	Survey data from CES2019 is utilized to create a model for election results
+o	The outcome variable that will be modeled will be binary and reflect whether or not a vote will be cast in favour of the incumbent Liberal Party of Canada based on a set of variables.
+o	The predictions from this model can then be extrapolated to a more representative population in a process called post-stratification, in which datapoints from GSS that are characteristically similar to data points in the CES2019 can be utilised to calculate a proportion which can then be applied to the estimated values from the model
+
+-	A multiple logistic model was selected over a linear model as the binary outcome variable produces a situation where responses are on complete opposite sides from one another which would result in the linear regression treating many of those variables as outliers. A logistic model differs from a linear model in that it considers the response as a binary choice. As well, a logistic model produces an estimate of the odds of a predicted response rather than the explicit predicted response that is produced from a linear model. The odds of a logistic model are denoted by $log(\frac{p}{1-p})$, where $p$ represents the probability of the outcome.
+>
 
 
 ### Model Specifics
-<Here you can describe your regression model>
-**USING LOGISITIC MODEL TO BEGIN --> 
-                                                        
-<I will (incorrectly) be using a linear regression model to model the proportion of voters who will vote for Donald Trump. This is a naive model. I will only be using age, which is recorded as a numeric variable, to model the probability of voting for Donald Trump. The simple linear regression model I am using is:> 
 
-                                                        
+<The chosen model, shown below, was constructed by attempting to minimize a metric called Bayesian Information Criterion (BIC) which penalizes models for having to many variables and thus seeks to create the best model with the least number of variables. BIC is minimised through a process called stepwise selection which iterates between adding variables and removing them from the model until a minimum is determined. The presented model originated from a larger model that contained all relevant variables which were determined to be relevant and were appropriate for post-stratification. Namely, this initial model includes age, province, religion importance, family income, university completion, marital status, and employment. The model produced from the BIC stepwise selection process comprised of province, university completion, and employment.>
+
+ 
+
+$$ log(\frac{p}{1-p}) = \beta_0 + \beta_1  x_{province} + \beta_2  x_{university} + \beta_3  x_{employed}   $$                                             
                                                         
 $$ y = \beta_0+\beta_1  x_{age} + \epsilon$$
 
