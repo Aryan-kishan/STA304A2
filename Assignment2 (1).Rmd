@@ -11,6 +11,7 @@ output:
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(openintro)
 library(tidyverse)
+library(MASS)
 ```
 
 
@@ -80,31 +81,57 @@ The sample consisted of 66% wireless telephone numbers and 34% landline telephon
 # Here you can load in and clean the census data (you may need to do the cleaning in a separate R script). 
 
 census_data <- read_csv("gss_clean.csv")
-summary(census_data)
+ 
+updated_census_data <- census_data %>% 
+  mutate(province = 
+           case_when(
+             province == "Quebec" ~ "East",
+             province == "Ontario" ~ "East",
+             province == "New Brunswick" ~ "East",
+             province == "Newfoundland and Labrador" ~ "East",
+             province == "Nova Scotia" ~ "East",
+             province == "Prince Edward Island" ~ "East",
+             province == "Alberta" ~ "West",
+             province == "Manitoba" ~ "West",
+             province == "Saskatchewan" ~ "West",
+             province == "British Columbia" ~ "West"),
+         religion_important = case_when(
+           regilion_importance == "Very important" ~ 1,
+           regilion_importance == "Somewhat important" ~ 1,
+           regilion_importance == "Not very important" ~ 0,
+           regilion_importance == "Not at all important" ~ 0,
+           regilion_importance == "Don't know" ~ 0
+         ),
+         age=round(age)
+  ) %>%  dplyr::select (province, religion_important, age)
+updated_census_data <- na.omit(updated_census_data)
 
-income_family_data <- census_data %>% select(income_family)
-income_family_data_cat <- unique(income_family_data)
-income_family_data_cat
+updated_census_data <- updated_census_data %>%
+  group_by(province, religion_important) %>%
+  summarise(n=n()) %>% 
+  mutate(prop = n /sum(n))
 
-# You may need additional chunks, in case you want to include some of the cleaning output.
-census_data <- census_data %>% 
-  rowwise() %>% 
-  mutate(income_family = case_when(
-    income_family=="Less than $25,000" ~ 12500,
-    income_family=="$25,000 to $49,999" ~ 37500,
-    income_family=="$50,000 to $74,999" ~ 62500,
-    income_family=="$75,000 to $99,999" ~ 87500,
-    income_family=="$100,000 to $ 124,999" ~ 112500,
-    income_family=="$125,000 and more" ~ 200000,
-  )) 
+                                       
+                                       
 
-census_data <- census_data %>% 
-  mutate(age=round(age)) %>% 
-  select(age, total_children, is_male, hh_size, income_family, province, education, religion_importance, religion_participation, language_home)
-census_data <- na.omit(census_data)
-summary(census_data) 
-#tells Rstudio to omit all rows of data with NA in the variables of interest
-
+# # You may need additional chunks, in case you want to include some of the cleaning output.
+# census_data <- census_data %>% 
+#   rowwise() %>% 
+#   mutate(income_family = case_when(
+#     income_family=="Less than $25,000" ~ 12500,
+#     income_family=="$25,000 to $49,999" ~ 37500,
+#     income_family=="$50,000 to $74,999" ~ 62500,
+#     income_family=="$75,000 to $99,999" ~ 87500,
+#     income_family=="$100,000 to $ 124,999" ~ 112500,
+#     income_family=="$125,000 and more" ~ 200000,
+#   )) 
+# 
+# census_data <- census_data %>% 
+#   mutate(age=round(age)) %>% 
+#   select(age, total_children, is_male, hh_size, income_family, province, education, religion_importance, religion_participation, language_home)
+# census_data <- na.omit(census_data)
+# summary(census_data) 
+# #tells Rstudio to omit all rows of data with NA in the variables of interest
 ```
 
 
@@ -156,38 +183,24 @@ survey_data_LARGE <-
   mutate(vote_liberal = ifelse(p3==1,1,0),
          age = 2022-q2,
          province = case_when(
-           q4 == 1 ~ "Newfoundland and Labrador",
-           q4 == 2 ~ "Prince Edward Island",
-           q4 == 3 ~ "Nova Scotia",
-           q4 == 4 ~ "New Brunswick",
-           q4 == 5 ~ "Quebec",
-           q4 == 6 ~ "Ontario",
-           q4 == 7 ~ "Manitoba",
-           q4 == 8 ~ "Sasketchewan",
-           q4 == 9 ~ "Alberta",
-           q4 == 10 ~ "British Columbia",
-           q4 == 11 ~ "Northwest Territories",
-           q4 == 12 ~ "Yukon",
-           q4 == 13 ~ "Nunavut"),
-         elec_interest = q9,
+           q4 <= 6 ~ "East",
+           q4 > 6 ~ "West",
+         ),
          voting_likelihood = q10,
          pref_party = case_when(
            q11 == 1 ~ "Liberal",
            q11 == 2 ~ "Conservatives",
-           q11 == 3 ~ "New Democratic Party",
-           q11 == 4 ~ "Block Quebecois",
-           q11 == 5 ~ "Green Party",
-           q11 == 6 ~ "People's Party",
-           q11 == -9 || -8 || -7 || 7 || 8 || 9 || 10  ~ "Other"),
+           q11 == 3 | 4 | 5 | 6 | -9 | -8 | -7 | 7 | 8 | 9 | 10 ~ "Other"),
          lean_party = case_when(
-           q12 == 1 ~ "Liberal",
-           q12 == 2 ~ "Conservatives",
-           q12 == 3 ~ "New Democratic Party",
-           q12 == 4 ~ "Block Quebecois",
-           q12 == 5 ~ "Green Party",
-           q12 == 6 ~ "People's Party",
-           q12 == -9 || -8 || -7 || 7 || 8 || 9 || 10  ~ "Other"),
-         gov_satisfaction = q13,
+           q11 == 1 ~ "Liberal",
+           q11 == 2 ~ "Conservatives",
+           q11 != 1 | 2 ~ "Other"),
+        gov_satisfaction = case_when(
+           q13 == 1 ~ "Satisfied",
+           q13 == 2 ~ "Satisfied",
+           q13 == 3 ~ "Not Satisfied",
+           q13 == 4 ~ "Not Satisfied",
+           q13 < 1  ~ "Other"),
          voting_duty = ifelse(q76 == 1,1,0),
          volunteer = ifelse(q45 == 1,1,0),
          know_premier = ifelse(q48 == 1 |q48 == 2, 1,0),
@@ -197,106 +210,61 @@ survey_data_LARGE <-
          perceived_winner = case_when(
            q35 == 1 ~ "Liberal Party",
            q35 == 2 ~ "Conservative Party",
-           q35 == 3 ~ "NDP",
-           q35 == 4 ~ "Bloc Quebecois",
-           q35 == 5 ~ "Green Party",
-           q35 == 6 ~ "People's Party",
-           q35 == -9 || -8 || -7 ||7 ~ "Other"),
+           q35 == 3 || 4 || 5 || 6 || -9 || -8 || -7 || 7 ~ "Other"
+           ),
          perceived_winner_riding = case_when(
            q37 == 1 ~ "Liberal Party",
            q37 == 2 ~ "Conservative Party",
-           q37 == 3 ~ "NDP",
-           q37 == 4 ~ "Bloc Quebecois",
-           q37 == 5 ~ "Green Party",
-           q37 == 6 ~ "People's Party",
-           q37 == -9 || -8 || -7 ||7 ~ "Other"),
+           q37 != 1 || 2 ~ "other"
+           ),
          fed_bettereconomy = ifelse(q32 == 1,1,0),
          better_economy = ifelse(q31 == 1,1,0),
-         more_immigrantspending = ifelse(q27_e == 1, 1,0),
-         opinion_defence_spending = case_when(
+         more_immigrant_spending = ifelse(q27_e == 1, 1,0),
+         more_defence_spending = case_when(
            q27_d == 1 ~ "Spend More",
-           q27_d == 2 ~ "Spend Less",
-           q27_d == 3 ~ "Same as now",
-           q27_d == -9 || -8 || -7 ~ "Other"),
-         opinion_crime_spending = case_when(
+           q27_d != 1~ "Spend Less or the same"),
+         more_crime_spending = case_when(
            q27_c == 1 ~ "Spend More",
-           q27_c == 2 ~ "Spend Less",
-           q27_c == 3 ~ "Same as now",
-           q27_c == -9 || -8 || -7 ~ "Other"),
-         opinion_environment_spending = case_when(
+           q27_c != 1 ~ "Spend Less or the same"),
+         more_environment_spending = case_when(
            q27_b == 1 ~ "Spend More",
-           q27_b == 2 ~ "Spend Less",
-           q27_b == 3 ~ "Same as now",
-           q27_b == -9 || -8 || -7 ~ "Other"),
-         opinion_trudeau = case_when(
-           q46 == 1 ~ "Strongly Agree",
-           q46 == 2 ~ "Somewhat Agree",
-           q46 == 3 ~ "Somewhat Disagree",
-           q46 == 4 ~ "Strongly Disagree",
-           q46 == -9 || -8 || -7 ~ "Other"),
+           q27_b != 1 ~ "Spend Less or the same"),
+         kept_promises_trudeau = case_when(
+           q46 == 1 ~ "Agree",
+           q46 == 2 ~ "Agree",
+           q46 == 3 ~ "Disagree",
+           q46 == 4 ~ "Diasgree"),
          voted_2015 = ifelse(q59 == 1,1,0),
          party_2015 = case_when(
            q60 == 1 ~ "Liberal Party",
            q60 == 2 ~ "Conservative Party",
-           q60 == 3 ~ "NDP",
-           q60 == 4 ~ "Bloc Quebecois",
-           q60 == 5 ~ "Green Party",
-           q60 == 6 ~ "People's Party",
-           q60 == -9 || -8 || -7 ||7 ~ "Other"),
-         watched_debate = ifelse(q77 == 1,1,0),
+           q60 != 1|| 2 ~ "Other"),
          completed_highschool = ifelse (q61 >= 5, 1,0),
-         religion = q62,
          religion_important = ifelse (q63 == 1 | q63 == 2, 1,0),
          en_first_language = ifelse(q67 == 1,1,0),
          household_income = ifelse(q69 >= 0, q69, 0),
          voted_2019 = case_when(
-           p2 == 1 ~ 1,
-           p2 == 2 || 3 || 5 ~ 2,
-           p2 == -9||-8||-7||5||"NA" ~ 0
+           p2 == 1 ~ "Voted",
+           p2 == 2  || 3 || 4 || 5 || 6 ||-9 || -8 || -7~  "Didn't Vote"
          ),
          opinion_federal_performance = case_when(
-           p5 == 1 ~ "Very Good Job",
-           p5 == 2 ~ "A good job",
+           p5 == 1 ~ "Good Job",
+           p5 == 2 ~ "Good Job",
            p5 == 3 ~ "Bad Job",
-           p5 == 4 ~ "Very Bad Job",
-           p5  == -9 || -8 || -7 || "NA" ~ "Other"),
+           p5 == 4 ~ "Bad Job",
+           p5 == -9 || -8 || -7 || "NA" ~ "Other"),
          married = case_when(
-           p50 == 1 ~ "married",
+           p50 == 1 ~ "Married",
            p50 == 1 || 2 || 3|| 4|| 5 || 6 ~ "not married"
            ),
          union = case_when(
-           p51 == 1 ~ "IN a union",
+           p51 == 1 ~ "In a union",
            p50 == 1 || 2 || 3|| 4|| 5 || 6 ~ "not in a union"
-           ),
-         religious_attendence = case_when(
-           p54 == 1 ~ "never",
-           p54 == 2 ~ "once a year",
-           p54 == 3 ~ "two to elevent times a year",
-           p54 == 4 ~ "once a month",
-           p54 == 5 ~ "two or more times a month",
-           p54 == 6 ~ "once a week",
-           p54 == 7 ~ "more than once a week",
-           is.na(p54) == TRUE ~ "other"
-           ),
-         control_of_power = case_when(
-           p33 == 1 ~ 1,
-           p33 == 2 ~ 2,
-           p33 == 3 ~ 3,
-           p33 == 4 ~ 4,
-           p33 == 5 ~ 5,
-           p33 == -9 || - 8 || -7 || NA ~ 0
-           ),
-         vote_matters = case_when(
-           p34 == 1 ~ 1,
-           p34 == 2 ~ 2,
-           p34 == 3 ~ 3,
-           p34 == 4 ~ 4,
-           p34 == 5 ~ 5,
-           p34 == -9 || - 8 || -7 || NA ~ 0
            )
          ) %>% 
-  select(vote_liberal, age, province, elec_interest, pref_party, lean_party, gov_satisfaction, know_premier, volunteer, know_financemin, voting_duty, more_refugees, more_immigrants, perceived_winner, perceived_winner_riding, fed_bettereconomy, better_economy, more_immigrantspending,
-opinion_defence_spending, opinion_crime_spending, opinion_environment_spending, opinion_trudeau, voted_2015, party_2015, watched_debate, completed_highschool, religion, religion_important, en_first_language, household_income, voted_2019, opinion_federal_performance, married, union, religious_attendence, control_of_power, vote_matters)                                              
+dplyr::select(vote_liberal, age, province, pref_party, lean_party, gov_satisfaction, know_premier, volunteer, know_financemin, voting_duty, more_refugees, more_immigrants, perceived_winner, perceived_winner_riding, fed_bettereconomy, better_economy, more_immigrant_spending,more_defence_spending, more_crime_spending, more_environment_spending, kept_promises_trudeau, voted_2015, party_2015, completed_highschool, religion_important, en_first_language, household_income, voted_2019, opinion_federal_performance, married, union)
+
+survey_data_LARGE <- na.omit(survey_data_LARGE)                                 
                                               
 
 ```
@@ -383,14 +351,52 @@ $$ y = \beta_0+\beta_1  x_{age} + \epsilon$$
 ```{r, include=FALSE}
 
 # Creating the Model
-model <- lm(vote_liberal ~ age, data=survey_data)
+test <- glm(vote_liberal~age + as.factor(province)  + as.factor(elec_interest) + as.factor(lean_party) + as.factor(pref_party), survey_data_LARGE, family=binomial)
+summary(test)
 
-# Model Results (to Report in Results section)
-# summary(model)
-# OR
-# broom::tidy(model)
+#Removed as.factor(pref_party) because was producing NA
 
-### Don't show the results/output here...
+LARGE_logit_model <- glm(vote_liberal~age + as.factor(province) + as.factor(lean_party)  + as.factor (gov_satisfaction) + as.factor(know_premier) + as.factor(know_financemin) + as.factor(volunteer) + as.factor(voting_duty)+ as.factor(more_refugees) + as.factor(more_immigrants) +as.factor(perceived_winner) +as.factor(perceived_winner_riding) +as.factor(fed_bettereconomy) +as.factor(better_economy) +as.factor(more_immigrant_spending) +as.factor(more_defence_spending) + as.factor(more_environment_spending) +as.factor(more_crime_spending) +as.factor(kept_promises_trudeau) +as.factor(voted_2015) +as.factor(party_2015) + as.factor(completed_highschool) + as.factor(religion_important) + as.factor(en_first_language) + household_income + as.factor(opinion_federal_performance) + as.factor(married) + as.factor(union), survey_data_LARGE, family=binomial)
+summary(LARGE_logit_model)
+#AIC = 913.49
+
+##BIC model selection
+sel.var.bic <- step(LARGE_logit_model, trace = 0, k = log(length(survey_data_LARGE$vote_liberal)), direction = "both") 
+select_var_bic<-attr(terms(sel.var.bic), "term.labels")
+select_var_bic
+
+#results from LARGE model --> Lean party, party 2015, opinion_federal_performance
+##BIC Model
+BIC_stepwise_model <- glm(vote_liberal ~ as.factor(lean_party) + as.factor(party_2015) + as.factor(opinion_federal_performance), survey_data_LARGE,
+                          family=binomial)
+summary(BIC_stepwise_model)
+BIC(BIC_stepwise_model)
+#AIC is 475.13
+#BIC is 507.349
+
+##AIC model selection
+sel.var.aic <- step(LARGE_logit_model, trace = 0, k = 2, direction = "both") 
+select_var_aic<-attr(terms(sel.var.aic), "term.labels")
+select_var_aic
+#results: province, lean_party, know_financemin, perceived_winner, more_defence_spending, kept_promises_trudeau, voted_2015, party_2015, religion_importance,
+#opinion_federal performance
+#AIC model
+AIC_stepwise_model <- glm(vote_liberal ~ as.factor(province) + as.factor(lean_party) + as.factor(know_financemin) + as.factor(perceived_winner) + as.factor(more_defence_spending) + as.factor(kept_promises_trudeau) + as.factor(voted_2015) + as.factor(party_2015) +as.factor(religion_important) + as.factor(opinion_federal_performance), survey_data_LARGE, family=binomial)
+summary(AIC_stepwise_model)
+#AIC is 434.63
+#BIC is 540.2749
+
+##BIC modified to include province and religion
+BIC_step_mod <- glm(vote_liberal ~ as.factor(province) + as.factor(religion_important) +as.factor(lean_party) + as.factor(party_2015) + as.factor(opinion_federal_performance), survey_data_LARGE,
+                          family=binomial)
+summary(BIC_step_mod)
+
+##poststratification -- unsure of how to apply to data
+census_data$estimate <- AIC_stepwise_model %>% 
+  predict(newdata = updated_census_data)
+
+#AIC = 911.25 (-votemtters), 904.28(-controlofpower), 903.49(-union), 903.49 (-married), 899.97 (-household income), 1372.4
+
 
 ```
 
