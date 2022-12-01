@@ -49,31 +49,9 @@ Lastly, our report will contain the following sections: “Data”, “Methods�
 
 ## Data
 
-<The 2017 General Social Survey data is a sample survey with a cross-sectional design, facilitated from February 2nd through to November 30th, 2017. The 
-target population of the survey is all non-institutionalized persons above the age of 15, living in Canada. The survey uses telephone numbers combined 
-with Statistics Canada’s Address Register to collect data via telephone. The data is subject to sampling and non-damping errors. The data collected is
-used to meet two primary objectives; to monitor changes in living conditions and well-being of Canadian individuals and to gather information on specific 
-social policy issues of current or arising interest. In order to meet these objectives data collected by the GSS contains core content and classification 
-variables. The core content data contains information about individuals living conditions and well-being to help inform specific policies. Classification 
-variables such as age, income, education, marital status, and sex help to classify population groups to better analyze the core data within them. In order 
-to collect the data each of the ten provinces in Canada was divided into strata, and within the ten provinces, many of the Census Metropolitan Areas were 
-considered separate strata, for a total of 27 strata. A simple random sample without replacement of records was performed within each stratum. The data 
-was collected via computer-assisted telephone interviews. Responses from the interviews were entered directly into computers as the interview went on. The 
-data was then electronically transmitted to Ottawa. Several questions in the data allowed for write-in responses. These responses were either categorized 
-into existing groups or left in “other specify” if a match was not possible within the existing data. As the survey was conducted the computer would 
-create edits and identify “out of range" values that the interviewer could clarify and resolve with the individual being surveyed. If issues were unable 
-to be resolved the errors were forwarded to the Head Office for resolution. Non-response was not permitted for questions that the survey later required to
-use for the weighting of individuals. In the case where important values were missing values were imputed.  In 2017, personal income information was not 
-obtained through the survey but rather collected from tax data for the respondent. Finally, the timing that respondents experienced given life events was 
-very important to the survey and was collected from individuals’ recollections. Originally the month and year of a particular event were asked, however, 
-if individuals were unable or refused to provide such information then the age at which he or she experienced the event is asked. For some situations, the 
-answers required imputation to derive the age, month, and year of the occurrence of events for individuals.>
+<The 2017 General Social Survey data is a sample survey with a cross-sectional design, facilitated from February 2nd through to November 30th, 2017. The target population of the survey is all non-institutionalized persons above the age of 15, living in Canada. The survey uses telephone numbers combined with Statistics Canada’s Address Register to collect data via telephone. The data is subject to sampling and non-damping errors. The data collected isused to meet two primary objectives; to monitor changes in living conditions and well-being of Canadian individuals and to gather information on specific social policy issues of current or arising interest. In order to meet these objectives data collected by the GSS contains core content and classification variables. The core content data contains information about individuals living conditions and well-being to help inform specific policies. Classification variables such as age, income, education, marital status, and sex help to classify population groups to better analyze the core data within them. In order to collect the data each of the ten provinces in Canada was divided into strata, and within the ten provinces, many of the Census Metropolitan Areas were considered separate strata, for a total of 27 strata. A simple random sample without replacement of records was performed within each stratum. The data was collected via computer-assisted telephone interviews. Responses from the interviews were entered directly into computers as the interview went on. The data was then electronically transmitted to Ottawa. Several questions in the data allowed for write-in responses. These responses were either categorized into existing groups or left in “other specify” if a match was not possible within the existing data. As the survey was conducted the computer would create edits and identify “out of range" values that the interviewer could clarify and resolve with the individual being surveyed. If issues were unable to be resolved the errors were forwarded to the Head Office for resolution. Non-response was not permitted for questions that the survey later required to use for the weighting of individuals. In the case where important values were missing values were imputed.  In 2017, personal income information was not obtained through the survey but rather collected from tax data for the respondent. Finally, the timing that respondents experienced given life events was very important to the survey and was collected from individuals’ recollections. Originally the month and year of a particular event were asked, however, if individuals were unable or refused to provide such information then the age at which he or she experienced the event is asked. For some situations, the answers required imputation to derive the age, month, and year of the occurrence of events for individuals.>
 
-In the 2019 Canadian Election Study, a Phone survey was conducted to gather information on the underlying reasons why people make the voting decisions 
-they do, to evaluate what does and does not change during the campaign from one election to another, and to highlight similarities and differences between 
-elections and voting in Canada to other democratic countries. The study was conducted on Canadian citizens and permanent residents age 18 or older during 
-and after the 2019 federal election. The data was collected through computer-assisted telephone interviews, consisting of 4021 cases and 278 variables. 
-The sample consisted of 66% wireless telephone numbers and 34% landline telephone numbers.>
+In the 2019 Canadian Election Study, a Phone survey was conducted to gather information on the underlying reasons why people make the voting decisions they do, to evaluate what does and does not change during the campaign from one election to another, and to highlight similarities and differences between elections and voting in Canada to other democratic countries. The study was conducted on Canadian citizens and permanent residents age 18 or older during and after the 2019 federal election. The data was collected through computer-assisted telephone interviews, consisting of 4021 cases and 278 variables. The sample consisted of 66% wireless telephone numbers and 34% landline telephone numbers.>
 
 
 ```{r, include = FALSE}
@@ -129,18 +107,10 @@ updated_census_data1 <- updated_census_data %>%
   summarise(n=n()) %>% 
   mutate(prop = n /sum(n))    
 
-                                                                                # 
-# census_data <- census_data %>% 
-#   mutate(age=round(age)) %>% 
-#   select(age, total_children, is_male, hh_size, income_family, province, education, religion_importance, religion_participation, language_home)
-# census_data <- na.omit(census_data)
-# summary(census_data) 
-# #tells Rstudio to omit all rows of data with NA in the variables of interest
 ```
 
 
-<Beyond the original cleaning process, the census data was further cleaned by selecting 10 important variables that could be important to determine the vote of individuals. For the variables income_family the data was converted to numeric values of levels of income instead of categorical values to be easier for computations. The data was also then cleaned by omitting any rows of data that had missing values in these variables. Age is defined as the average age of the respondent rounded to the nearest integer, while gender is the identified gender of the individual. 
-> ]
+<Beyond the original cleaning process, the census data was further cleaned by changing the values of variables to be easier for computation and reduced to contain only important variables with individuals with all selected variable values recorded. The variable province was mutated to two different categories of east and west to be easier for computation. Religious importance is converted to a dummy variable with a value of 1 if religion is important at all and 0 if not. Age is mutated into categories representing the same age categories as the survey data. Education is also converted to a dummy variable with a value of 1 for a University certificate, diploma or degree above the bachelor's and 0 for College, CEGEP or other non-university certificate or diploma. The variable married and employed are also converted to dummy variables with a value of 1 if the individual is married or employed and 0 otherwise. The data was then reduced by selecting to only contain variables province, religion_important, age, income_family, completed_university, married, and employed. The data then was lastly cleaned by omitting any rows of data that have NA values in the selected variables.>
 
 <Here is a resource for grabbing the CES2019 data: [https://awstringer1.github.io/sta238-book/section-short-tutorial-on-pulling-data-for-assignment-1.html#section-canadian-election-study](https://awstringer1.github.io/sta238-book/section-short-tutorial-on-pulling-data-for-assignment-1.html#section-canadian-election-study)>
 
@@ -286,22 +256,16 @@ hist(census_data$is_male)
 
 ## Methods
 
-<-	Goal of this report is to” predict the overall popular vote of the next Canadian federal election”
--	Survey data from CES2019 is utilized to create a model for election results
-o	The outcome variable that will be modeled will be binary and reflect whether or not a vote will be cast in favour of the incumbent Liberal Party of Canada based on a set of variables.
-o	The predictions from this model can then be extrapolated to a more representative population in a process called post-stratification, in which datapoints from GSS that are characteristically similar to data points in the CES2019 can be utilised to calculate a proportion which can then be applied to the estimated values from the model
-
--	A multiple logistic model was selected over a linear model as the binary outcome variable produces a situation where responses are on complete opposite sides from one another which would result in the linear regression treating many of those variables as outliers. A logistic model differs from a linear model in that it considers the response as a binary choice. As well, a logistic model produces an estimate of the odds of a predicted response rather than the explicit predicted response that is produced from a linear model. The odds of a logistic model are denoted by $log(\frac{p}{1-p})$, where $p$ represents the probability of the outcome.
->
+<Include some text introducing the methodology, maybe restating the problem/goal of this analysis.>
 
 
 ### Model Specifics
+<Here you can describe your regression model>
+**USING LOGISITIC MODEL TO BEGIN --> 
+                                                        
+<I will (incorrectly) be using a linear regression model to model the proportion of voters who will vote for Donald Trump. This is a naive model. I will only be using age, which is recorded as a numeric variable, to model the probability of voting for Donald Trump. The simple linear regression model I am using is:> 
 
-<The chosen model, shown below, was constructed by attempting to minimize a metric called Bayesian Information Criterion (BIC) which penalizes models for having to many variables and thus seeks to create the best model with the least number of variables. BIC is minimised through a process called stepwise selection which iterates between adding variables and removing them from the model until a minimum is determined. The presented model originated from a larger model that contained all relevant variables which were determined to be relevant and were appropriate for post-stratification. Namely, this initial model includes age, province, religion importance, family income, university completion, marital status, and employment. The model produced from the BIC stepwise selection process comprised of province, university completion, and employment.>
-
- 
-
-$$ log(\frac{p}{1-p}) = \beta_0 + \beta_1  x_{province} + \beta_2  x_{university} + \beta_3  x_{employed}   $$                                             
+                                                        
                                                         
 $$ y = \beta_0+\beta_1  x_{age} + \epsilon$$
 
