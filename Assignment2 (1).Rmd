@@ -150,7 +150,6 @@ survey_data <- read_csv("ces2019-phone_clean.csv")
 ```{r, include = FALSE}
 
 #### You will need to update/clean the code below based off the variables you want to use in your poststratification.
-survey_data %>% mutate(voted_2019 = ifelse(p2 == 1,1,0)) %>% select(voted_2019)
 
 survey_data_LARGE <- 
   survey_data %>% 
@@ -185,7 +184,7 @@ survey_data_LARGE <-
           q68 < 1 | q68 > 3 ~ 0
         )
          ) %>% 
-dplyr::select(vote_liberal, age, province, completed_university, religion_important, income_family, married, employed)
+dplyr::select(en_first_language, vote_liberal, age, province, completed_university, religion_important, income_family, married, employed)
 
 survey_data_LARGE <- na.omit(survey_data_LARGE)
                                               
@@ -193,9 +192,7 @@ survey_data_LARGE <- na.omit(survey_data_LARGE)
 ```
 
 
-<The important variables we will be using for post-stratification in the model are vote_liberal, age, province, completed_university, religion_important, income_family, married, and employed. There are a lot of redundant variables in the survey data set and so in the cleaning process, we removed variables that seemed to be overlapping with others by using the select function. The variables we selected to use are especially informative as to which way an individual tends to lean politically. Age is a categorical variable for the age of the individual over 18. Province points to whether an individual lives in the east or west of Canada. Completed University is a dummy variable that has a value of one if an individual obtained university certification. Religion_important is another dummy variable which has value one if religion is important to the individual. en_first_language is another dummy variable which has value one if the individual has English as their first language and 0 otherwise.  Income_family is a categorical variable that depicted the income of the individual. The last two variables denoted married and employed are also dummy variables with values 1 if the individual is married/employed and 0 otherwise.  All of these variables will be important in predicting the vote_liberal dummy variable which has a value of 1 when an individual votes liberal and 0 otherwise. >
-                                          
-                                          
+<The important variables we will be using for post-stratification in the model are vote_liberal, age, province, completed_university, religion_important, income_family, married, and employed. There are a lot of redundant variables in the survey data set and so in the cleaning process, we removed variables that seemed to be overlapping with others by using the select function. The variables we selected to use are especially informative as to which way an individual tends to lean politically. Age is a categorical variable for the age of the individual over 18. Province points to whether an individual lives in the east or west of Canada. Completed University is a dummy variable that has a value of one if an individual obtained university certification. Religion_important is another dummy variable which has value one if religion is important to the individual. en_first_language is another dummy variable which has value one if the individual has English as their first language and 0 otherwise.  Income_family is a categorical variable that depicted the income of the individual. The last two variables denoted married and employed are also dummy variables with values 1 if the individual is married/employed and 0 otherwise.  All of these variables will be important in predicting the vote_liberal dummy variable which has a value of 1 when an individual votes liberal and 0 otherwise. >                                     
                                              
 
 
@@ -204,25 +201,61 @@ survey_data_LARGE <- na.omit(survey_data_LARGE)
 # Use this to calculate some summary measures. 
 library(knitr)
 
-survey_data %>% 
-  summarise("Avg" = mean(age), "StD" = sd(age), "n" = length(age), "StdError" = StD/sqrt(n)) %>%
-  rename("Average" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
-  kable(caption = "Statistics about Survey Data Age")
 
-survey_data %>% 
-  summarise("Avg" = mean(is_male), "StD" = sd(is_male), "n" = length(is_male), "StdError" = StD/sqrt(n)) %>%
-  rename("Proportion Male" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
-  kable(caption = "Statistics about Survey Data is_male")
 
-census_data %>% 
-  summarise("Avg" = mean(age), "StD" = sd(age), "n" = length(age), "StdError" = StD/sqrt(n)) %>%
-  rename("Average" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
-  kable(caption = "Statistics about Census Data Age")
+survey_data_LARGE %>% 
+  summarise("Avg" = mean(vote_liberal), "StD" = sd(vote_liberal), "n" = length(vote_liberal), "StdError" = StD/sqrt(n)) %>%
+  rename("Proportion Vote_liberal" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Survey Data vote_liberal")
 
-census_data %>% 
-  summarise("Avg" = mean(is_male), "StD" = sd(is_male), "n" = length(is_male), "StdError" = StD/sqrt(n)) %>%
-  rename("Proportion Male" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
-  kable(caption = "Statistics about Census Data is_male")
+
+survey_data_LARGE %>% 
+  summarise("Avg" = mean(completed_university), "StD" = sd(completed_university), "n" = length( completed_university), "StdError" = StD/sqrt(n)) %>%
+  rename("Proportion Completed_university" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Survey Data Completed_university")
+
+
+survey_data_LARGE %>% 
+  summarise("Avg" = mean(religion_important), "StD" = sd(religion_important), "n" = length(religion_important), "StdError" = StD/sqrt(n)) %>%
+  rename("Proportion religion_important" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Survey Data religion_important")
+
+
+survey_data_LARGE %>% 
+  summarise("Avg" = mean(employed), "StD" = sd(employed), "n" = length(employed), "StdError" = StD/sqrt(n)) %>%
+  rename("Proportion employed" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Survey Data employed")
+
+
+survey_data_LARGE %>% 
+  summarise("Avg" = mean(en_first_language), "StD" = sd(en_first_language), "n" = length(en_first_language), "StdError" = StD/sqrt(n)) %>%
+  rename("Proportion en_first_language" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Survey Data en_first_language")
+
+
+
+
+
+
+
+updated_census_data %>% 
+  summarise("Avg" = mean(completed_university), "StD" = sd(completed_university), "n" = length( completed_university), "StdError" = StD/sqrt(n)) %>%
+  rename("Proportion Completed_university" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Census Data Completed_university")
+
+
+updated_census_data %>% 
+  summarise("Avg" = mean(religion_important), "StD" = sd(religion_important), "n" = length(religion_important), "StdError" = StD/sqrt(n)) %>%
+  rename("Proportion religion_important" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Census Data religion_important")
+
+
+updated_census_data %>% 
+  summarise("Avg" = mean(employed), "StD" = sd(employed), "n" = length(employed), "StdError" = StD/sqrt(n)) %>%
+  rename("Proportion employed" = "Avg", "Standard Deviation" = "StD", "Number of Observations" = "n", "Standard Error" = "StdError") %>%
+  kable(caption = "Statistics about Census Data employed")
+
+
 
 
 
@@ -231,21 +264,28 @@ census_data %>%
 ```
 
 
-<Include a description of the numerical summaries. Remember you can use `r ` to use inline R code.>
+< The numerical summaries above look at the proportion of the population or survey sample that exhibits super characteristics. The summaries also state the devotion from the proportion, the number of observations or individuals analyzed and the standard error. In looking at the vote_liberal variable in the survey data we can see that from 1769 individuals approximately 31% of the sample voted liberal. We can also see from the survey data that approximately 43% of the survey sample completed university, whereas in the population data of 18766 individuals only approximately 32% completed university. In investigating another variable, religion_important, we can see that in the survey sample a whopping 72% reported religion being of importance to them, whereas in the population data a smaller 64% reported religion being of importance. In the survey data for employment, we can see that only approximately 54% of individuals were employed. The population census data from employment is very similar to the sample with approximately 52% of individuals being employed. From the survey data, we also see that roughly 69% of individuals have English as their first language. In comparing the survey and census data the census data consistently has a lower standard error which makes sense for the increase in observations. The standard deviation of variables between the population and sample is relatively similar. >
+
+                              
                                                         
                                                         
 ```{r, echo = TRUE}
 
 # Use this to create some plots. Should probably describe both the sample and population.
-hist(survey_data$age)
-hist(survey_data$is_male)
+hist(survey_data_LARGE$vote_liberal)
+hist(survey_data_LARGE$completed_university)
 
-hist(census_data$age)
-hist(census_data$is_male)
+hist(updated_census_data$completed_university)
+
 
 ```
 
-<Include a clear description of the plot(s). I would recommend one paragraph for each plot.> 
+<The first plot titled “Histogram of survey_data_LARGE$vote_liberal” shows the frequencies of liberal vote values. Since the variable vote_liberal is a dummy variable it can only take values 0 and 1 which gives us the two columns at 0 and 1 on the x-axis. From the plot, we can see the survey data contains substantially more non-liberal voters than liberal voters. 
+
+The second Histogram titled “Histogram of survey_data_LARGE$completed_university” shows the frequencies of individuals in the survey having completed a university degree. We can see from the plot that there is almost an equal amount of university and non-university graduates. 
+
+The third Histogram titled “Histogram of updated_census_data$completed_university” depicts the frequency of individuals in the census population having completed a university degree. We can see from the plot that there is a much smaller proportion of university graduates than non-grads in the population. This is interesting to compare to the survey sample which had a more similar proportion of this characteristic. > 
+
 
 
 ## Methods
