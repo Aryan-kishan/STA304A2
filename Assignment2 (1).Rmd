@@ -193,13 +193,7 @@ survey_data_LARGE <- na.omit(survey_data_LARGE)
 ```
 
 
-<Remember, you may want to use multiple datasets here, if you do end up using multiple data sets, or merging the data, be sure to describe this in the cleaning process and be sure to discuss important aspects of all the data that you used.>
-
-** IMPORTANT VARIABLES: vote_liberal (response variable), province, pref_party, (age), party_2015 (...any more that we want to especially focus on) will be especially
-informative; particular provinces tend to lean certain ways politically; the preferred party variable is directly indicative of voters' preferences; typically most voters will vote the same way election after election (SOURCE) so information regarding the previous election's voting record is expected to be very informative.
-** OTHER VARIABLES TO LOOK OUT FOR: income, perceived winners, opinion_fedeconomy and opinion_econonmy, variables related to immigration, refugees, defense, and crime typically reflect partisan issues (SOURCE) and are expected to also be informative --> can describe this more in depth if needed
-
-There are alot of redundent variabels and in the cleaning process we removed varibles that seemd to be overlapping with others by using the select function.
+<The important variables we will be using for post-stratification in the model are vote_liberal, age, province, completed_university, religion_important, income_family, married, and employed. There are a lot of redundant variables in the survey data set and so in the cleaning process, we removed variables that seemed to be overlapping with others by using the select function. The variables we selected to use are especially informative as to which way an individual tends to lean politically. Age is a categorical variable for the age of the individual over 18. Province points to whether an individual lives in the east or west of Canada. Completed University is a dummy variable that has a value of one if an individual obtained university certification. Religion_important is another dummy variable which has value one if religion is important to the individual. en_first_language is another dummy variable which has value one if the individual has English as their first language and 0 otherwise.  Income_family is a categorical variable that depicted the income of the individual. The last two variables denoted married and employed are also dummy variables with values 1 if the individual is married/employed and 0 otherwise.  All of these variables will be important in predicting the vote_liberal dummy variable which has a value of 1 when an individual votes liberal and 0 otherwise. >
                                           
                                           
                                              
