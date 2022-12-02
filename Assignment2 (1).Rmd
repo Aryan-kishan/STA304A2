@@ -375,40 +375,43 @@ Table. VIF
 
 ```{r, include=FALSE}
 
-# Creating the Model
-model <- lm(vote_liberal ~ age, data=survey_data)
-
 # Model Results (to Report in Results section)
-# summary(model)
-# OR
-# broom::tidy(model)
+mod_summary <- summary(bic_model)
+               
 ```
 
 ```{r, include=FALSE}
 
-# Here I will perform the post-stratification calculation
-census_data_counts <- census_data %>% 
-  group_by(age) %>% 
-  summarise(n=n())
+# From the poststratification calculations done previously, calculate the
+# estimate of the probability that the Liberal Party will receive the majority
+# vote.
 
-census_data_counts$estimate <-
-  model %>%
-  predict(newdata = census_data_counts)
+#Taking the mean of the liberal_prediction column in the poststratification
+#calculation:
 
-census_data_counts %>% 
-  mutate(liberal_predict_prop = estimate*n) %>%
-  summarise(liberal_predict = sum(liberal_predict_prop)/sum(n))
+y_est <- round(mean(estimated_data$liberal_prediction), digits=2)
 
 ```
 
-<Here you present your results. You may want to put them into a well formatted table. Be sure that there is some text describing the results.>
+The final model created using Bayesian Inference is:
+
+$$\log{\frac{\hat{p}}{1-\hat{p}}} = \beta_0 + \beta_1  x_{province} + \beta_2  x_{university} + \beta_3  x_{employed}$$
+
+By generating a summary of the model, the following estimates for the coefficients were found:
+
+|Coefficient | Estimated value | Error | p-value |
+|------|------|------|------|
+|$\beta_0$ | -0.53 | 0.09 |$2.21 \times 10^{-8}$ |
+|$\beta_1$ | -0.95 | 0.12 |$8.13 \times 10^{-16}$ |
+|$\beta_2$ | 0.47 | 0.11 |$1.20 \times 10^{-5}$ |
+|$\beta_3$ | -0.36 | 0.11 |$6.92 \times 10^{-4}$ |
 
 
-<Note: Alternatively you can use the `knitr::kable` function to create a well formatted table from your code. See here: [https://rmarkdown.rstudio.com/lesson-7.html](https://rmarkdown.rstudio.com/lesson-7.html).>
+From this table, we can see that all of the p-values for the predictor variables are very small (all less than 1%), therefore all of the predictor variables are statistically significant. Additionally, the errors on the estimations of the coefficients are relatively small, so we can assume that these variables provide a fairly reasonable fit to the survey data.
 
+However, the accuracy of the model depends on the sample data. The survey data had many missing observations which greatly reduced the amount of usable data. Thus, the reduction in the number of sampled elements affects how accurately the sample represents the population. Additionally, in a report from Statistics Canada, it was found that in addition to province, education, and employment, other factors that may affect voting are age, family status, immigration status, and economic well-being (Uppal and LaRochelle-Côté,2012). Since these factors in the survey data were not found to be significant enough to be in the final model, this may also affect the accuracy of the model.
 
-
-<Remember you can use `r ` to use inline R code.>
+Using poststratification, it was found that the predicted probability that the Liberal Party would receive the majority vote is `r y_est` or 28%. From the official results of the 43rd General Election, it was found that the Liberal Party received 33.1% of votes while the Conservative Party received 34.3% of votes (Elections Canada, 2019). Since the Liberal Party did not have the majority vote in 2019, it aligns with the predicted probability that was found from the 2019 census data.
 
 
 ```{r, include = FALSE}
@@ -418,7 +421,6 @@ census_data_counts %>%
 
 ```
 
-<Include an explanation/interpretation of the visualizations. Make sure to comment on the appropriateness of the assumptions/results.>
 
 ## Conclusions
 
