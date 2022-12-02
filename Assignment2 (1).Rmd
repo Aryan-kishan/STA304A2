@@ -1,5 +1,5 @@
 ---
-title: "Informative Title Name"
+title: "Predicting the Next Canadian Federal Election"
 author: "Group 86: Mary Jones, Michael Tsimidis, Patrice Yee and Aryan Niraj Kishan"
 date: November 24, 2022
 subtitle: STA304 - Assignment 2
