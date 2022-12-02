@@ -30,8 +30,8 @@ The main objective of this report is to use a regression model with post-stratif
    
    Furthermore, we can represent this question in the form of a null and alternative hypothesis. Here the null hypothesis states that none of the predictive covariates have a statistically significant relationship with our dependent variable. On the other hand, the alternative hypothesis states that at least one predictive covariate has a statistically significant relationship with our dependent variable [4].
   
-$$H_0:\beta_Province = \beta_UniversityCompletion = \beta_Employment = 0$$
-$$H_1:\beta_Province = \beta_UniversityCompletion = \beta_Employment \neq 0$$
+$$H_0:\beta_1 = \beta_2 = \beta_3 = 0$$
+$$H_1:\beta_1 = \beta_2 = \beta_3 \neq 0$$
  
    Overall, this hypothesis test is important because it will help us determine whether our model is statistically significant and whether it can actually predict if an individual will vote for the Liberal Party of Canada.
    
