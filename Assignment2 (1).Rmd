@@ -446,3 +446,7 @@ Using poststratification, it was found that the predicted probability that the L
 3.  Allaire, J.J., et. el. *References: Introduction to R Markdown*. RStudio. [https://rmarkdown.rstudio.com/docs/](https://rmarkdown.rstudio.com/docs/). (Last Accessed: January 15, 2021) 
   
 4. Zach. (2021, September 29). Understanding the null hypothesis for logistic regression. Statology. Retrieved December 1, 2022, from https://www.statology.org/null-hypothesis-of-logistic-regression/ 
+
+5. Elections Canada. (2019) *Forty-Third General Election 2019: Official Voting Results*.[https://www.elections.ca/res/rep/off/ovr2019app/51/table9E.html](https://www.elections.ca/res/rep/off/ovr2019app/51/table9E.html)
+
+6. Uppal, S., & LaRochelle-Côté, S. (2012, February 24) *Factors associated with voting*. Statistics Canada.[https://www150.statcan.gc.ca/n1/pub/75-001-x/2012001/article/11629-eng.htm](https://www150.statcan.gc.ca/n1/pub/75-001-x/2012001/article/11629-eng.htm)
